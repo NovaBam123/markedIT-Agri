@@ -1,0 +1,155 @@
+.scrollable-tabs{
+    display: flex;
+    overflow-x: auto; /* Biar bisa di-scroll horizontal */
+    white-space: nowrap; /* Biar tab gak turun ke bawah */
+    gap: 10px;
+    padding-bottom: 5px;
+    color-scheme: dark;
+    scrollbar-width: thin;
+}
+.content-manager{
+    height: 100vh;
+}
+.content-body{
+     height: 130vh;
+     background-color: #1a1a1a; 
+}
+.button-box{
+    background:#26393b !important;
+}
+.btn-details{
+    height: 40px;
+    box-shadow: 2px 4px 4px black;
+}
+.btn-details:hover{
+    background: #26393b !important;
+}
+.btn-details.new-note:hover{
+      background: #26393b !important;
+}
+.sidebar-container{
+    min-width: 250px;
+    max-height: 80vh;
+    overflow-y: auto;
+    color-scheme: dark;
+    scrollbar-width: thin;
+}
+.side-details{
+    width: 8px;
+    top: 1px;
+    bottom: 10px;
+    z-index: 1;
+    margin-left: 1px;
+}
+
+.text-content{
+    font-size: 12px;
+}
+.text-title{
+    font-size: 14px;
+}
+Button p{
+    font-size: 12px;
+}
+.delete-btn:hover{
+    background-color: red !important;
+}
+
+.back-button-wrapper span{
+    font-size: 12px;
+}
+
+.back-button{
+    border: none !important;
+    transition: 0.2s ease;
+}
+.back-button:hover svg,
+.back-button:hover span{
+    color: white !important;
+    transform: scale(1.4);
+}
+
+.details-container{
+    height: 87vh;
+    color-scheme: dark;
+    scrollbar-width: thin;
+    overflow: hidden;
+    box-shadow: 2px 2px 4px black;
+}
+.scroll-content{
+    scrollbar-width: thin;
+}
+
+/* ==================MarkDown================== */
+.markdown-body {
+  color: white; /* Biar teks hasil render tetep putih/terang */
+  line-height: 1.6;
+}
+
+.markdown-body ul {
+  padding-left: 20px;
+}
+
+.markdown-body h1, .markdown-body h2 {
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+  margin-top: 20px;
+  font-size: 26px;
+  color: skyblue
+}
+/* 1. Putihin Cursor di Editor (SimpleMDE) */
+.CodeMirror-cursor {
+    border-left: 2px solid white !important; /* Paksa jadi putih */
+    opacity: 1 !important;
+}
+
+/* 2. Warna Teks Saat Ngetik (Biar gak nyaru) */
+.CodeMirror-line {
+    color: white !important;
+}
+
+/* 3. (Opsional) Jika lo pake Textarea Biasa juga */
+textarea:focus {
+    color: white !important;
+    caret-color: white !important; /* Ini buat textarea standar HTML */
+}
+
+p strong{
+    margin: 0px;
+    padding: 0px;
+}
+ul li {
+    list-style-type: none;           
+    background-color:#444;         
+    color: white;                    
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    margin-left: -20px;
+  }
+
+ul li code {
+    color: white;                  
+}
+ul li a{
+    color: yellowgreen;
+    text-decoration: none;
+}
+
+.divider{
+    height: 5px;
+    background-color: #dfdfe2;
+    margin-bottom: 20px;
+}
+h2{
+    font-size: 12px;
+}
+.custom-link img {
+    width: 25px;
+    height: 25px;
+    margin-right: 8px;
+    transition: transform 0.2s ease-in-out;
+};
+.custom-link:hover img{
+    transform: scale(1.2);
+}

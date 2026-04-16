@@ -1,0 +1,273 @@
+:root{
+    --transp_white-2: rgba(255, 255, 255, 0.1);
+    --blue1: #93e0eb;
+    --blue2: #0e8999;
+}
+
+/* Atur warna masing-masing bagian logo */
+.main-logo .logo-left {
+    fill: #0DCAF0; /* Warna biru */
+}
+
+.main-logo .logo-right {
+    fill: #FF4747; /* Warna merah */
+}
+
+.main-logo .logo-center {
+    fill: yellow; /* Warna putih */
+}
+.main-logo{
+    z-index: 10;
+    top: 6px;
+    left: 5px;
+}
+
+nav{
+    background: red !important;
+}
+
+.title-app h2{
+    color: #FF5F15;
+}
+.title-app h2 span{
+    color: #39FF14;
+}
+.title-app div{
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #c5b5b5;
+    margin-top: -2px;
+    font-weight: 700;
+}
+
+/* collapse localstorage-data */
+.menu-icon-style{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    color: #888;
+    text-decoration: none;
+}
+.menu-icon-style button{
+    padding: 2px;
+}
+
+.font-icon-style{
+    font-size: 11px;
+    font-weight: 600;
+}
+.font-icon-style.settings:hover{
+    color: white !important;
+}
+
+.menu-icon-style svg,
+.menu-icon-style span {
+  color: #888;
+  transition: 0.2s ease;
+}
+.menu-icon-style.delete:hover svg{
+    color: #ff4d4f;
+}
+.menu-icon-style.delete:hover span{
+    color: #ff4d4f;
+}
+
+.menu-icon-style:hover svg {
+  color: white;
+  transform: scale(1.2);
+}
+
+.menu-icon-style:hover span {
+  color: white;
+}
+
+.clock-style small{
+    font-size: 0.7rem;
+    letter-spacing: 0.6px;
+}
+.clock-style p{
+    font-size: 1.3rem;
+    line-height: 0.6;
+}
+.clock-style{
+    margin-top: 8px;
+    font-family: -apple-system;
+}
+/* Add Button supaya ga geser*/
+html {
+    scrollbar-gutter: stable !important;
+}
+body.modal-open{
+    padding-right: 0 !important;
+    overflow-y: hidden !important;
+}
+.hamburger-menu{
+    border: 0 !important;
+    padding: 0.25rem !important;
+}
+.hamburger-menu .navbar-toggler-icon {
+    width: 22px !important;  /* Samain dengan size={20} Lucide lo */
+    height: 22px !important;
+}
+.hamburger-menu{
+    transition: scale 0.8s ease !important;
+}
+.hamburger-menu:hover{
+    transform: scale(0.9);
+}
+
+.hamburger-menu:not(.collapsed){
+    outline: 1px solid white !important;
+}
+.hamburger-menu.collapsed {
+    outline: 0 !important;
+}
+
+.tombol-menu,
+.setting-menu {
+    transition: transform 0.2s ease !important;
+    border: 0 !important;
+}
+
+.tombol-menu.aktif,
+.setting-menu.aktif {
+    outline: 1px solid white !important;
+}
+.download-icon{
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+.download-icon:hover, 
+.download-icon:active {
+    color: #ffffff !important; 
+}
+
+/* Pastikan Icon ngikut warnanya */
+.download-icon svg {
+    transition: transform 0.2s ease;
+}
+
+.download-icon:hover svg {
+    transform: scale(1.2); /
+}
+
+.search-inputStyle:focus{
+    color: none;
+    box-shadow: inset 2px 2px 4px black !important;
+}
+
+.button-searchStyle{
+   transition: all 0.5s ease !important; 
+   &:hover{
+    background: #bdccd1 !important;
+   }
+}
+.input-style{
+   min-width: 25px; 
+   min-height: 35px;
+   overflow: hidden;
+}
+input:focus {
+    outline: none !important;
+    box-shadow: inset 1px 2px black !important;
+}
+.btn-custom {
+    border: none !important;
+    outline: none !important;
+    width: 35px !important;
+    height: 35px !important;
+}
+.btn-custom:hover{
+    background-color: skyblue;
+}
+
+/* panah bawah dari toggle */
+.dropdown-toggle.setting-arrow::after{
+    display: none !important;
+} 
+.dropdown-item.disabled{
+    color: #6c757d !important;
+    opacity: 30%;
+}
+.dropdown-menu{
+    background-color: #2d2d2d !important;
+    z-index: 1050 !important;
+}
+.dropdown-item{
+    font-size: 12px !important;
+    color: white !important;
+    z-index: 1050 !important;
+}
+.dropdown-item:hover{
+    background-color: grey !important;
+}
+/* App.css */
+.editor-toolbar, .CodeMirror, .editor-preview-side {
+    background: #2b3035 !important; /* Warna gelap ala Bootstrap Dark */
+    color: white !important;
+    border: 1px solid #444 !important;
+}
+
+.editor-toolbar button {
+    color: #ccc !important;
+}
+
+.editor-toolbar button.active, .editor-toolbar button:hover {
+    background: #444 !important;
+}
+/* Biar area editor SimpleMDE gak lari-lari */
+.CodeMirror {
+    height: 400px !important; /* Patok tinggi editornya */
+    background: #2b2b2b !important;
+    color: white !important;
+    border: none !important;
+}
+.modal, .modal-backdrop, .modal-header{
+    z-index: 2050 !important;
+}
+
+/* Tuning Scrollbar Modal biar senada sama app lo */
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+    scrollbar-width: thin;
+    color-scheme: dark;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 10px;
+}
+.cm-string{
+    /* color: rgb(234, 119, 52) !important; */
+    color: skyblue !important;
+    opacity: 75%;
+}
+.cm-attribute{
+    color:#FF4747 !important;
+    font-weight: 500;
+}
+.navbar-utama{
+    position: sticky !important;
+    top: 0;
+    background: #000 !important;
+    z-index: 2000 !important;
+    border-bottom: 1px solid #343a40;
+}
+.navbar-wrapper{
+    background: transparent !important;
+}
+
+/* Untuk versi Dropdown */
+/* .setting-menu[aria-expanded="true"] {
+  outline: 1px solid white;
+}
+.setting-menu[aria-expanded="false"] {
+  outline: none;
+}
+.dropdown-toggle.setting-arrow::after{
+    display: none !important;
+} */
+
