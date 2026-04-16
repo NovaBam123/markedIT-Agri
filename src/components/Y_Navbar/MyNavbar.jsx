@@ -75,11 +75,11 @@ function MyNavbar({
               width: "40",
             })}
           </div>
-          <div className="d-flex flex-column ms-1 title-app">
+          <div className="d-flex flex-column ms-2 title-app">
             <h2 className="mb-0 fw-bold fs-2">
               Marked<span>IT Agri</span>
             </h2>
-            <div>CLOUD-SYNC FIELD LOG SYSTEM</div>
+            <div>CLOUD-SYNC FIELD LOG</div>
           </div>
           <input
             type="file"
