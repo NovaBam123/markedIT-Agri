@@ -259,6 +259,15 @@ input:focus {
 .navbar-wrapper{
     background: transparent !important;
 }
+/* ================ButtonNav========================= */
+.bottom-nav{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #FF4747;
+    z-index: 1500;
+}
 
 /* Untuk versi Dropdown */
 /* .setting-menu[aria-expanded="true"] {
