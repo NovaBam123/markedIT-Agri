@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 
-function ButtonNav() {
+function BottomNav() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isStandalone, setIsStandalone] = useState(false);
   const [isReady, setIsReady] = useState(false);
@@ -48,4 +48,4 @@ function ButtonNav() {
     </Container>
   );
 }
-export default ButtonNav;
+export default BottomNav;

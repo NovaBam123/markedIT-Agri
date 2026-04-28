@@ -4,7 +4,8 @@ import A2_CardManager from './components/Cards/A2_CardManager';
 import MyNavbar from './components/Y_Navbar/MyNavbar';
 import Z1_ModalNote from './components/Z1_ModalNote';
 import { defaultCategories, categoryIcons } from './utils/InitialCategories';
-import ButtonNav from './components/Y_Navbar/Z3_ButtonNav';
+import ButtonNav from './components/Y_Navbar/Z3_BottomNav';
+import BottomNav from './components/Y_Navbar/Z3_BottomNav';
 
 function App() {
   // ForModalNote =========================================
@@ -294,7 +295,7 @@ function App() {
             categories={categories}
             />
         </Container>
-        <ButtonNav />
+        <BottomNav />
         </div>
     );
 }
