@@ -187,20 +187,27 @@ function App() {
     const file = new File([blob], "Markedit_Data.json", {
       type: "application/json",
     });
-    // ✅ 1. Try Web Share (mobile PWA)
-    if (navigator.share && navigator.canShare?.({ files: [file] })) {
-      await navigator.share({
-        files: [file],
-        title: "Backup Data",
-      });
-      return;
+    // ✅ TRY SHARE LANGSUNG (tanpa canShare)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: "Backup Data",
+        });
+        alert("download success!");
+        return;
+      } catch (err) {
+        alert("Share gagal, fallback ke download", err);
+      }
     }
-    // ✅ 2. Fallback download (desktop)
+    // ✅ fallback download
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
     link.download = "Markedit_Data.json";
+    document.body.appendChild(link); // 🔥 penting
     link.click();
+    document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
   const downloadTxt = () => {
