@@ -183,9 +183,10 @@ function App() {
       categories: categories,
     };
     const fileContent = JSON.stringify(backupData, null, 2);
-    const blob = new Blob(["\ufeff", fileContent], {
-      type: "application/json;utf-8",
-    });
+    const blob = new Blob(
+        ["\ufeff" + fileContent], 
+        {type: "application/json;charset=utf-8"}
+    );
     const url = URL.createObjectURL(blob);
     const dateStr = new Date().toLocaleDateString("id-ID").replace(/\//g, "-");
     const link = document.createElement("a");
