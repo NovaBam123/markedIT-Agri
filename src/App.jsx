@@ -140,28 +140,50 @@ function App() {
   const handleUploadData = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    let text = "";
+    // ✅ TRY 1: file.text()
     try {
-      const text = await file.text(); // 🔥 ini fix utama
-      console.log("RAW:", text);
+      text = await file.text();
+    } catch (err) {
+      console.log("Error:", err);
+      alert("file.text() gagal, fallback ke FileReader");
+    }
+    // ✅ TRY 2: fallback FileReader
+    if (!text) {
+      try {
+        text = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsText(file);
+        });
+      } catch (err) {
+        console.error(err);
+        alert("Error! Failed to read file");
+        return;
+      }
+    }
+    // 🔥 CLEAN TEXT (jaga2 encoding aneh)
+    text = text.replace(/^\uFEFF/, "").trim();
+    try {
       const importedData = JSON.parse(text);
       if (
         importedData &&
         Array.isArray(importedData.notes) &&
         Array.isArray(importedData.categories)
       ) {
-        if (
-          window.confirm("Warning! New data will overwrite oldData, Proceed?")
-        ) {
+        if (window.confirm("Warning! Overwrite old data?")) {
           setListNote(importedData.notes);
           setCategories(importedData.categories);
-          alert("Succeed! Data succesfully installed!");
+          alert("Success! Data installed!");
         }
       } else {
-        alert("Error! Data is not valid format!");
+        alert("Error! Invalid JSON structure!");
       }
     } catch (err) {
-      console.error(err);
-      alert("Error! Failed to read file");
+      console.error("PARSE ERROR:", err);
+      console.log("TEXT:", text);
+      alert("Error! JSON parse failed");
     }
     e.target.value = "";
   };
@@ -183,10 +205,9 @@ function App() {
       categories: categories,
     };
     const fileContent = JSON.stringify(backupData, null, 2);
-    const blob = new Blob(
-        ["\ufeff" + fileContent], 
-        {type: "application/json;charset=utf-8"}
-    );
+    const blob = new Blob(["\ufeff" + fileContent], {
+      type: "application/json;charset=utf-8",
+    });
     const url = URL.createObjectURL(blob);
     const dateStr = new Date().toLocaleDateString("id-ID").replace(/\//g, "-");
     const link = document.createElement("a");
