@@ -4,13 +4,13 @@ import { ArrowBigLeftDash } from "lucide-react";
 function AboutView({ onBack }) {
   return (
     <Container className="text-light about-view py-2">
-      <h4 className="my-2 ms-1 border-bottom border-secondary pb-2 text-info">
+      <h4 className="my-2 ms-1 border-bottom border-secondary pb-1 text-info">
         About App
       </h4>
 
-      <div className="p-3 rounded border border-secondary bg-secondary bg-opacity-10">
+      <div className="px-3 py-1 rounded border border-secondary bg-secondary bg-opacity-10">
         {/* Header App */}
-        <div className="mb-2">
+        <div className="mb-1">
           <h5 className="fw-bold m-0">Marked
             <span>IT Agri</span>
             </h5>
@@ -18,7 +18,7 @@ function AboutView({ onBack }) {
         </div>
 
         {/* Intro */}
-        <p className="text-white opacity-90 mb-4">
+        <p className="text-white opacity-90 mb-3">
           MarkedIT Agri is a Progressive Web App (PWA) engineered specifically
           for agronomist and agricultural field research. It functions as a lightweight,
           offline-first Markdown editor designed to handle structured data
@@ -53,14 +53,14 @@ function AboutView({ onBack }) {
         </div>
 
         {/* Value Prop */}
-        <div className="bg-info p-2 rounded small opacity-75 fst-italic text-dark fw-semibold mt-4">
+        <div className="bg-info p-2 rounded small opacity-75 fst-italic text-dark fw-semibold mt-3">
           Built to bridge the gap between field-level raw data and
           decision-support systems, eliminating the friction of traditional
           logging.
         </div>
 
         {/* Stack */}
-        <div className="mt-3 pt-1 border-top border-secondary">
+        <div className="mt-1 pt-1 border-top border-secondary">
           <div className="d-flex flex-wrap gap-2 box-stack mt-1">
             {[
               "React.js",
@@ -74,7 +74,7 @@ function AboutView({ onBack }) {
             ))}
           </div>
         </div>
-        <p className="mb-0 mt-2 small opacity-50">✨©2026 Nova Bamahry</p>
+        <p className="mb-0 mt-1 small opacity-50 text-end">✨©2026 Nova Bamahry</p>
       </div>
 
       <Button
