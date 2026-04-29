@@ -3,7 +3,7 @@ import { ArrowBigLeftDash } from "lucide-react";
 
 function AboutView({ onBack }) {
   return (
-    <Container className="text-light about-view py-2">
+    <Container className="text-light about-view py-0">
       <h4 className="my-2 ms-1 border-bottom border-secondary pb-1 text-info">
         About App
       </h4>
@@ -18,7 +18,7 @@ function AboutView({ onBack }) {
         </div>
 
         {/* Intro */}
-        <p className="text-white opacity-90 mb-3">
+        <p className="text-white opacity-90 mb-3 small">
           MarkedIT Agri is a Progressive Web App (PWA) engineered specifically
           for agronomist and agricultural field research. It functions as a lightweight,
           offline-first Markdown editor designed to handle structured data
@@ -33,19 +33,19 @@ function AboutView({ onBack }) {
           <div className="d-flex flex-column gap-1 small">
             <div className="ps-3 border-start border-info border-3">
               <div className="fw-bold text-white">Offline-First</div>
-              <div className="opacity-75">
+              <div className="opacity-75 lh-1">
                 Prioritizing data entry in zero-connectivity environments.
               </div>
             </div>
             <div className="ps-3 border-start border-info border-3">
               <div className="fw-bold text-white">Markdown-Based</div>
-              <div className="opacity-75">
+              <div className="opacity-75 lh-1">
                 Standardized text engine for data consistency.
               </div>
             </div>
             <div className="ps-3 border-start border-info border-3">
               <div className="fw-bold text-white">Sync-Ready</div>
-              <div className="opacity-75">
+              <div className="opacity-75 lh-1">
                 Seamless cloud push once connectivity is re-established.
               </div>
             </div>
@@ -53,15 +53,15 @@ function AboutView({ onBack }) {
         </div>
 
         {/* Value Prop */}
-        <div className="bg-info p-2 rounded small opacity-75 fst-italic text-dark fw-semibold mt-3">
+        <div className="bg-info p-2 rounded small opacity-75 fst-italic text-dark fw-semibold mt-2">
           Built to bridge the gap between field-level raw data and
           decision-support systems, eliminating the friction of traditional
           logging.
         </div>
 
         {/* Stack */}
-        <div className="mt-1 pt-1 border-top border-secondary">
-          <div className="d-flex flex-wrap gap-2 box-stack mt-1">
+        <div className="mt-1 pt-1 border-top border-light opacity-75">
+          <div className="d-flex flex-wrap gap-2 box-stack">
             {[
               "React.js",
               "Bootstrap 5",
