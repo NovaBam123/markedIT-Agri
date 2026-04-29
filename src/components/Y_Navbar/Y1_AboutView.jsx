@@ -3,16 +3,18 @@ import { ArrowBigLeftDash } from "lucide-react";
 
 function AboutView({ onBack }) {
   return (
-    <Container className="text-light about-view py-3">
-      <h4 className="my-2 ms-1 border-bottom border-secondary pb-2">
+    <Container className="text-light about-view py-2">
+      <h4 className="my-2 ms-1 border-bottom border-secondary pb-2 text-info">
         About App
       </h4>
 
       <div className="p-3 rounded border border-secondary bg-secondary bg-opacity-10">
         {/* Header App */}
-        <div className="mb-3">
-          <h5 className="fw-bold text-info m-0">MarkedIT Agri</h5>
-          <span className="badge bg-info text-dark">v1.0.0</span>
+        <div className="mb-2">
+          <h5 className="fw-bold m-0">Marked
+            <span>IT Agri</span>
+            </h5>
+          <span className="badge bg-info text-dark mb-2">v1.0.0</span>
         </div>
 
         {/* Intro */}
@@ -24,11 +26,11 @@ function AboutView({ onBack }) {
         </p>
 
         {/* Core Architecture */}
-        <div className="mb-4">
-          <h6 className="text-info fw-bold mb-3 text-uppercase small tracking-wide">
+        <div className="mb-2">
+          <h6 className="text-info fw-bold mb-1 text-uppercase small tracking-wide">
             Core Architecture
           </h6>
-          <div className="d-flex flex-column gap-3 small">
+          <div className="d-flex flex-column gap-1 small">
             <div className="ps-3 border-start border-info border-3">
               <div className="fw-bold text-white">Offline-First</div>
               <div className="opacity-75">
@@ -51,23 +53,22 @@ function AboutView({ onBack }) {
         </div>
 
         {/* Value Prop */}
-        <div className="bg-dark p-2 rounded small opacity-75 fst-italic">
+        <div className="bg-info p-2 rounded small opacity-75 fst-italic text-dark fw-semibold mt-4">
           Built to bridge the gap between field-level raw data and
           decision-support systems, eliminating the friction of traditional
           logging.
         </div>
 
         {/* Stack */}
-        <div className="mt-4 pt-3 border-top border-secondary">
-          <p className="small mb-2 text-white opacity-50">Stack:</p>
-          <div className="d-flex flex-wrap gap-2">
+        <div className="mt-3 pt-1 border-top border-secondary">
+          <div className="d-flex flex-wrap gap-2 box-stack mt-1">
             {[
               "React.js",
               "Bootstrap 5",
               "PWA/Service Workers",
               "Markdown Engine",
             ].map((tech) => (
-              <span key={tech} className="badge bg-success text-white">
+              <span key={tech} className="badge text-dark">
                 {tech}
               </span>
             ))}

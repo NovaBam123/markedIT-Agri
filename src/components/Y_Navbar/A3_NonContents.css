@@ -273,8 +273,17 @@ input:focus {
     z-index: 1500;
 }
 .about-view{
-    padding-top: 1.5rem;
+    padding-top: 1.2rem;
     animation: fadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+}
+.about-view h5{
+    color: #FF5F15;
+}
+.about-view h5 span{
+    color: #39FF14 !important;
+}
+.box-stack span{
+    background: #39FF14;
 }
 @keyframes fadeIn{
     from{ opacity: 0; transform: translateY(-50px)}
