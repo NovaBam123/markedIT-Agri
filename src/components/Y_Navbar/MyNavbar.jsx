@@ -163,15 +163,21 @@ function MyNavbar({
 
           <Collapse in={openDownload}>
             <div>
-              <div className="d-flex flex-column gap-2 me-3">
-                <div className="d-flex align-items-center download-icon">
+              <div className="d-flex flex-column me-3 m-0 gap-2">
+                <Button 
+                    className="d-flex border-0 bg-transparent align-items-center download-icon p-0 opacity-75"
+                    onClick={onJson}
+                >
                   <FileJson size={20} />
                   <span className="font-icon-style ms-1">Save as JSON</span>
-                </div>
-                <div className="d-flex align-items-center download-icon">
+                </Button>
+                <Button 
+                    className="d-flex border-0 bg-transparent align-items-center download-icon p-0 opacity-75"
+                    onClick={onMarked}
+                >
                   <FileText size={20} />
                   <span className="font-icon-style ms-1">Save as Text</span>
-                </div>
+                </Button>
               </div>
             </div>
           </Collapse>
@@ -185,7 +191,7 @@ function MyNavbar({
               <span className="font-icon-style">Upload Data</span>
             </div>
 
-            <Dropdown align="center">
+            <Dropdown align="center" autoClose="outside">
               <Dropdown.Toggle
                 as="div"
                 className="d-none d-lg-block menu-icon-style setting-arrow"
@@ -193,17 +199,20 @@ function MyNavbar({
               >
                 <div className="menu-icon-style">
                   <CloudDownload size={20} />
-                  <span className="font-icon-style settings">Save All As</span>
+                  <span className="font-icon-style settings">Save All As
+                  </span>
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-menu-dark rounded-2 border">
                 <Dropdown.Item
+                  as="button"
                   className="d-flex align-items-center gap-2"
                   onClick={onJson}
                 >
                   <FileJson size={18} /> Save as JSON
                 </Dropdown.Item>
                 <Dropdown.Item
+                  as="button"
                   className="d-flex align-items-center gap-2"
                   onClick={onMarked}
                 >

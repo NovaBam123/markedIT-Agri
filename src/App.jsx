@@ -173,39 +173,20 @@ function App() {
     setCategories(defaultCategories);
     alert("Succeed! Data deleted successfully!");
   };
-  const downloadJSON = async () => {
-    if (listNote.length === 0) {
-      alert("Warning! Data is Empty.");
-      return;
-    }
+  const downloadJSON = () => {
+    if (listNote.length === 0) return alert("Warning! Data is Empty.");
     const backupData = {
       notes: listNote,
       categories: categories,
     };
     const fileContent = JSON.stringify(backupData, null, 2);
     const blob = new Blob([fileContent], { type: "application/json" });
-    const file = new File([blob], "Markedit_Data.json", {
-      type: "application/json",
-    });
-    // ✅ TRY SHARE LANGSUNG (tanpa canShare)
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          files: [file],
-          title: "Backup Data",
-        });
-        alert("download success!");
-        return;
-      } catch (err) {
-        alert("Share gagal, fallback ke download", err);
-      }
-    }
-    // ✅ fallback download
     const url = URL.createObjectURL(blob);
+    const dateStr = new Date().toLocaleDateString("id-ID").replace(/\//g, "-");
     const link = document.createElement("a");
     link.href = url;
-    link.download = "Markedit_Data.json";
-    document.body.appendChild(link); // 🔥 penting
+    link.download = `Markedit_Data_${dateStr}.json`;
+    document.body.appendChild(link); 
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
@@ -337,8 +318,7 @@ function App() {
           <BottomNav />
         </>
       )}
-      {currentView === "AboutView" && (
-        <AboutView onBack={() => setCurrentView("dashboard")} />
+      {currentView === "AboutView" && (<AboutView onBack={()=>setCurrentView("dashboard")} />
       )}
     </div>
   );
