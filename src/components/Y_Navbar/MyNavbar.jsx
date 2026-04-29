@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import "./Z2_NonContents.css";
+import "./A3_NonContents.css";
 import {
   CloudUpload,
   CloudDownload,
@@ -12,6 +12,7 @@ import {
   Download,
   FileJson,
   FileText,
+  Sprout,
 } from "lucide-react";
 import {
   Navbar,
@@ -31,16 +32,18 @@ function MyNavbar({
   onJson,
   onMarked,
   onDeleteDataJson,
+  onNavigate,
+  currentView,
 }) {
   const [openSearch, setOpenSearch] = useState(false);
-  const [theme, setTheme] = useState(false);
   const [openDownload, setOpenDownload] = useState(false);
   const [clock, setClock] = useState(getFormattedTime());
   const fileInputRef = React.useRef(null);
   const triggerUpload = () => {
     fileInputRef.current.click();
   };
-
+  const [expanded, setExpanded] = useState(false);
+   
   useEffect(() => {
     const interval = setInterval(() => {
       setClock(getFormattedTime());
@@ -51,7 +54,9 @@ function MyNavbar({
     <Navbar
       expand="lg"
       variant="dark"
+      expanded={expanded}
       className="text-white py-2 sticky-top navbar-utama"
+      onToggle={(expandedState) => setExpanded(expandedState)}
     >
       <Container className="navbar-wrapper">
         {/* KIRI: Logo */}
@@ -117,15 +122,19 @@ function MyNavbar({
             </button>
           </div>
 
-          {/* Setting */}
-          <div className="d-flex flex-column justify-content-center align-items-center me-2">
+          {/* AboutView */}
+          <div className="d-flex flex-column justify-content-center align-items-center me-2 d-lg-none">
             <button
-              className={`btn btn-link border-0 text-white p-1 setting-menu ${
-                theme ? "aktif" : ""
+              className={`btn btn-link border-0 text-white p-1 setting-menu sprout 
+              ${currentView === "AboutView" ? "aktif" : ""}
               }`}
-              onClick={() => setTheme(!theme)}
+              onClick={() => {
+                const nextView =
+                  currentView === "AboutView" ? "dashboard" : "AboutView";
+                onNavigate(nextView);
+              }}
             >
-              <Settings size={20} className="opacity-50" />
+              <Sprout size={20} className="opacity-50" />
             </button>
           </div>
           <Navbar.Toggle
@@ -162,21 +171,6 @@ function MyNavbar({
                 <div className="d-flex align-items-center download-icon">
                   <FileText size={20} />
                   <span className="font-icon-style ms-1">Save as Text</span>
-                </div>
-              </div>
-            </div>
-          </Collapse>
-
-          <Collapse in={theme}>
-            <div>
-              <div className="d-flex align-items-end gap-2 mt-1">
-                <div className="menu-icon-style">
-                  <Moon size={20} />
-                  <span className="font-icon-style">Dark Theme</span>
-                </div>
-                <div className="menu-icon-style">
-                  <Sun size={20} className="ms-2" />
-                  <span className="font-icon-style">Light Theme</span>
                 </div>
               </div>
             </div>
@@ -223,26 +217,21 @@ function MyNavbar({
               <span className="font-icon-style">Delete Data</span>
             </div>
 
-            <Dropdown align="center">
-              <Dropdown.Toggle
-                as="div"
-                className="d-none d-lg-block menu-icon-style setting-arrow"
-                role="button"
-              >
-                <div className="menu-icon-style">
-                  <Settings size={20} />
-                  <span className="font-icon-style settings">Settings</span>
-                </div>
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="dropdown-menu-dark rounded-2 border">
-                <Dropdown.Item className="d-flex align-items-center gap-2">
-                  <Moon size={18} /> Dark Theme
-                </Dropdown.Item>
-                <Dropdown.Item className="d-flex align-items-center gap-2">
-                  <Sun size={18} /> Light Theme
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            {/* =========Sprout u/ layar besar===================     */}
+            <div
+              className="d-none d-lg-block"
+              onClick={() => {
+                const nextView =
+                  currentView === "AboutView" ? "dashboard" : "AboutView";
+                onNavigate(nextView);
+              }}
+              role="button"
+            >
+              <div className="menu-icon-style setting-menu sprout d-flex flex-column">
+                <Sprout size={20} className="fw-bold" />
+                <span className="font-icon-style">About</span>
+              </div>
+            </div>
           </Nav>
         </Navbar.Collapse>
 
@@ -273,9 +262,3 @@ function MyNavbar({
   );
 }
 export default MyNavbar;
-
-// {svgLogo.wheat({
-//               // Pastikan lo ada iconnya, atau pake icon benih tunggal
-//               fill: "#39FF14",
-//               width: "35",
-//             })}

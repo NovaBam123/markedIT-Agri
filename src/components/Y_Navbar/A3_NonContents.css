@@ -1,7 +1,5 @@
-:root{
-    --transp_white-2: rgba(255, 255, 255, 0.1);
-    --blue1: #93e0eb;
-    --blue2: #0e8999;
+body{
+    background: #212529 !important;
 }
 
 /* Atur warna masing-masing bagian logo */
@@ -73,6 +71,9 @@ nav{
 .menu-icon-style.delete:hover span{
     color: #ff4d4f;
 }
+.menu-icon-style.sprout:hover svg{
+    color: #39FF14;
+}
 
 .menu-icon-style:hover svg {
   color: white;
@@ -130,10 +131,13 @@ body.modal-open{
     transition: transform 0.2s ease !important;
     border: 0 !important;
 }
-
-.tombol-menu.aktif,
-.setting-menu.aktif {
+.setting-menu.aktif,
+.tombol-menu.aktif
+ {
     outline: 1px solid white !important;
+}
+.setting-menu.sprout.aktif{
+    outline: 1px solid #39FF14 !important;
 }
 .download-icon{
     color: rgba(255, 255, 255, 0.5);
@@ -267,6 +271,14 @@ input:focus {
     right: 0;
     background-color: #FF4747;
     z-index: 1500;
+}
+.about-view{
+    padding-top: 1.5rem;
+    animation: fadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+}
+@keyframes fadeIn{
+    from{ opacity: 0; transform: translateY(-50px)}
+    to{ opacity: 1; transform: translateY(0)}
 }
 
 /* Untuk versi Dropdown */

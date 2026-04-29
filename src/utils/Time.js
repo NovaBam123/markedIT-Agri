@@ -17,7 +17,9 @@ export function getFormattedTime() {
     return {date, time};
 }
 export const getRelativeTime=(epochTime) => {
+    if(!epochTime || isNaN(epochTime)) return "N/A";
     const now= Date.now();
+    if(epochTime > now) return "just now";
     const diffInSecond= Math.floor((now-epochTime)/ 1000);
     if(diffInSecond< 60) return "just now"
     
@@ -28,11 +30,11 @@ export const getRelativeTime=(epochTime) => {
     if(diffInHours< 24) return `${diffInHours}h ago`;
 
     const diffInDays= Math.floor(diffInHours/ 24);
-    if(diffInDays< 7) return `${diffInDays}d ago`
+    if(diffInDays< 30) return `${diffInDays}d ago`
 
     const diffInMonths= Math.floor(diffInDays/ 30);
-    if(diffInDays< 12) return `${diffInMonths}mo ago`;
+    if(diffInMonths< 12) return `${diffInMonths}mo ago`;
 
-    const diffInYears= Math.floor(diffInDays/ 365);
+    const diffInYears= Math.floor(diffInMonths/ 12);
     return `${diffInYears}y ago`;
 }
