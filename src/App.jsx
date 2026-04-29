@@ -173,22 +173,34 @@ function App() {
     setCategories(defaultCategories);
     alert("Succeed! Data deleted successfully!");
   };
-  const downloadJSON = () => {
-    if (listNote.length === 0) return alert("Warning! Data is Empty.");
+  const downloadJSON = async () => {
+    if (listNote.length === 0) {
+      alert("Warning! Data is Empty.");
+      return;
+    }
     const backupData = {
       notes: listNote,
       categories: categories,
     };
     const fileContent = JSON.stringify(backupData, null, 2);
     const blob = new Blob([fileContent], { type: "application/json" });
+    const file = new File([blob], "Markedit_Data.json", {
+      type: "application/json",
+    });
+    // ✅ 1. Try Web Share (mobile PWA)
+    if (navigator.share && navigator.canShare?.({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: "Backup Data",
+      });
+      return;
+    }
+    // ✅ 2. Fallback download (desktop)
     const url = URL.createObjectURL(blob);
-    const dateStr = new Date().toLocaleDateString("id-ID").replace(/\//g, "-");
     const link = document.createElement("a");
     link.href = url;
-    link.download = `Markedit_Data_${dateStr}.json`;
-    document.body.appendChild(link); // Tambahkan ini biar lebih stabil di browser
+    link.download = "Markedit_Data.json";
     link.click();
-    document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
   const downloadTxt = () => {
@@ -318,7 +330,8 @@ function App() {
           <BottomNav />
         </>
       )}
-      {currentView === "AboutView" && (<AboutView onBack={()=>setCurrentView("dashboard")} />
+      {currentView === "AboutView" && (
+        <AboutView onBack={() => setCurrentView("dashboard")} />
       )}
     </div>
   );
