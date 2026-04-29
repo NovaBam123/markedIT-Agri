@@ -143,7 +143,9 @@ function App() {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const importedData = JSON.parse(e.target.result);
+        let rawResult= e.target.result;
+        const cleanJson= rawResult.trim().replace(/^\ufeff/, "")
+        const importedData= JSON.parse(cleanJson);
         if (importedData.notes && importedData.categories) {
           if (
             window.confirm("Warning! New data will overwrite oldData, Proceed?")
@@ -156,10 +158,11 @@ function App() {
           alert("Error! Data is not JSON format!");
         }
       } catch (err) {
+        console.error("Parse Error:", err);
         alert("Error! Failed to read file", console.log(err));
       }
     };
-    reader.readAsText(file);
+    reader.readAsText(file, "UTF-8");
     e.target.value = "";
   };
 
@@ -180,7 +183,7 @@ function App() {
       categories: categories,
     };
     const fileContent = JSON.stringify(backupData, null, 2);
-    const blob = new Blob([fileContent], { type: "application/json" });
+    const blob = new Blob(["\ufeff", fileContent], { type: "application/json;utf-8" });
     const url = URL.createObjectURL(blob);
     const dateStr = new Date().toLocaleDateString("id-ID").replace(/\//g, "-");
     const link = document.createElement("a");
