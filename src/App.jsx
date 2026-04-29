@@ -137,32 +137,32 @@ function App() {
     }
   };
   // CRUD storage ==========================================================
-  const handleUploadData = (e) => {
+  const handleUploadData = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        let rawResult= e.target.result;
-        const cleanJson= rawResult.trim().replace(/^\ufeff/, "")
-        const importedData= JSON.parse(cleanJson);
-        if (importedData.notes && importedData.categories) {
-          if (
-            window.confirm("Warning! New data will overwrite oldData, Proceed?")
-          ) {
-            setListNote(importedData.notes);
-            setCategories(importedData.categories);
-            alert("Succeed! Data succesfully installed to this app!");
-          }
-        } else {
-          alert("Error! Data is not JSON format!");
+    try {
+      const text = await file.text(); // 🔥 ini fix utama
+      console.log("RAW:", text);
+      const importedData = JSON.parse(text);
+      if (
+        importedData &&
+        Array.isArray(importedData.notes) &&
+        Array.isArray(importedData.categories)
+      ) {
+        if (
+          window.confirm("Warning! New data will overwrite oldData, Proceed?")
+        ) {
+          setListNote(importedData.notes);
+          setCategories(importedData.categories);
+          alert("Succeed! Data succesfully installed!");
         }
-      } catch (err) {
-        console.error("Parse Error:", err);
-        alert("Error! Failed to read file", console.log(err));
+      } else {
+        alert("Error! Data is not valid format!");
       }
-    };
-    reader.readAsText(file, "UTF-8");
+    } catch (err) {
+      console.error(err);
+      alert("Error! Failed to read file");
+    }
     e.target.value = "";
   };
 
@@ -183,13 +183,15 @@ function App() {
       categories: categories,
     };
     const fileContent = JSON.stringify(backupData, null, 2);
-    const blob = new Blob(["\ufeff", fileContent], { type: "application/json;utf-8" });
+    const blob = new Blob(["\ufeff", fileContent], {
+      type: "application/json;utf-8",
+    });
     const url = URL.createObjectURL(blob);
     const dateStr = new Date().toLocaleDateString("id-ID").replace(/\//g, "-");
     const link = document.createElement("a");
     link.href = url;
     link.download = `Markedit_Data_${dateStr}.json`;
-    document.body.appendChild(link); 
+    document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
@@ -321,7 +323,8 @@ function App() {
           <BottomNav />
         </>
       )}
-      {currentView === "AboutView" && (<AboutView onBack={()=>setCurrentView("dashboard")} />
+      {currentView === "AboutView" && (
+        <AboutView onBack={() => setCurrentView("dashboard")} />
       )}
     </div>
   );
