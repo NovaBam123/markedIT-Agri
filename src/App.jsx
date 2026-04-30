@@ -203,23 +203,35 @@ function App() {
     if (listNote.length === 0) return alert("Warning!, Data is Empty!");
     const backupData = { notes: listNote, categories: categories };
     const fileContent = JSON.stringify(backupData, null, 2);
-    // Buat file sementara
-    const file = new File([fileContent], `Markedit_Data.json`, {
-      type: "application/json",
-    });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({
-          files: [file],
-          title: "Backup Data MarkedIT Agri",
-          text: "Save this file to your cloud drive or file folder",
-        });
-      } catch (err) {
-        console.log("Warning! Share transfer file has failed:", err);
+    const fileName = `Markedit_Data_${new Date().getTime()}.json`;
+    // 1. Coba fitur Share (Khusus Mobile)
+    if (navigator.canShare && navigator.share) {
+      const file = new File([fileContent], fileName, {
+        type: "application/json",
+      });
+      if (navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: "Backup Data MarkedIT Agri",
+            text: "Backup data to your phone's or file",
+          });
+          return;
+        } catch (err) {
+          console.log("Share failed, falling back to download...", err);
+        }
       }
-    } else {
-      alert("Warning!, Your browser doesn't support the share file feature.");
     }
+    const blob = new Blob([fileContent], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    alert("Backup finished! (Downloaded via Browser)");
   };
   const downloadTxt = () => {
     if (listNote.length === 0) return alert("Warning! Data is Empty!");
