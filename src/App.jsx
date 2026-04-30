@@ -201,13 +201,19 @@ function App() {
   //=====Jalur share u/ mem-byPass strict lock os di AndroidMobile======
   const downloadJSON = async () => {
     if (listNote.length === 0) return alert("Warning! Data is Empty.");
+    const now = new Date();
+    const dateStr = now.toLocaleDateString("id-ID").replace(/\//g, "-");
+    // Opsional: Tambah Jam & Menit biar file gak bentrok kalau download berkali-kali
+    const timeStr =
+      now.getHours().toString().padStart(2, "0") +
+      now.getMinutes().toString().padStart(2, "0");
+    const fileName = `Markedit_Backup_${dateStr}_${timeStr}.json`;
     const backupData = {
       notes: listNote,
       categories: categories,
     };
     const fileContent = JSON.stringify(backupData, null, 2);
-    const fileName = `Markedit_Data_${new Date().getTime()}.json`;
-    // --- ENGINE 1: Modern SaveFilePicker (Ideal buat PC/Chrome) ---
+    // --- ENGINE 1: Modern SaveFilePicker ---
     if ("showSaveFilePicker" in window) {
       try {
         const handle = await window.showSaveFilePicker({
@@ -222,13 +228,13 @@ function App() {
         const writable = await handle.createWritable();
         await writable.write(fileContent);
         await writable.close();
-        return; // Berhasil, langsung keluar dari fungsi
+        return;
       } catch (err) {
         if (err.name === "AbortError") return;
         console.error("SaveFilePicker Error:", err);
       }
     }
-    // --- ENGINE 2: Fallback Standard (Paling Aman buat Mobile) ---
+    // --- ENGINE 2: Fallback Standard ---
     const blob = new Blob(["\ufeff", fileContent], {
       type: "application/json;charset=utf-8",
     });
@@ -238,13 +244,11 @@ function App() {
     link.download = fileName;
     document.body.appendChild(link);
     link.click();
-    // Cleanup
     setTimeout(() => {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     }, 100);
-
-    alert("Success! Downloaded file");
+    alert(`Success! Data saved as: ${fileName}`);
   };
   const downloadTxt = () => {
     if (listNote.length === 0) return alert("Warning! Data is Empty!");
