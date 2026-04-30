@@ -198,25 +198,28 @@ function App() {
     setCategories(defaultCategories);
     alert("Succeed! Data deleted successfully!");
   };
-  const downloadJSON = () => {
-    if (listNote.length === 0) return alert("Warning! Data is Empty.");
-    const backupData = {
-      notes: listNote,
-      categories: categories,
-    };
+  //=====Jalur share u/ mem-byPass strict lock os di AndroidMobile======
+  const downloadJSON = async () => {
+    if (listNote.length === 0) return alert("Warning!, Data is Empty!");
+    const backupData = { notes: listNote, categories: categories };
     const fileContent = JSON.stringify(backupData, null, 2);
-    const blob = new Blob(["\ufeff" + fileContent], {
-      type: "application/json;charset=utf-8",
+    // Buat file sementara
+    const file = new File([fileContent], `Markedit_Data.json`, {
+      type: "application/json",
     });
-    const url = URL.createObjectURL(blob);
-    const dateStr = new Date().toLocaleDateString("id-ID").replace(/\//g, "-");
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `Markedit_Data_${dateStr}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: "Backup Data MarkedIT Agri",
+          text: "Save this file to your cloud drive or file folder",
+        });
+      } catch (err) {
+        console.log("Warning! Share transfer file has failed:", err);
+      }
+    } else {
+      alert("Warning!, Your browser doesn't support the share file feature.");
+    }
   };
   const downloadTxt = () => {
     if (listNote.length === 0) return alert("Warning! Data is Empty!");
