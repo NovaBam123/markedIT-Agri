@@ -208,28 +208,28 @@ function App() {
       notes: listNote,
       categories: categories,
     };
-
     const fileContent = JSON.stringify(backupData, null, 2);
     const blob = new Blob(["\uFEFF" + fileContent], {
       type: "application/json;charset=utf-8",
     });
-
     const file = new File([blob], "Markedit_Data.json", {
       type: "application/json",
     });
-    // 🔥 INI KUNCI
-    if (navigator.share) {
+    // 🔥 DETECT MOBILE
+    const isMobile = /Android|iPhone/i.test(navigator.userAgent);
+    if (isMobile && navigator.share) {
       try {
         await navigator.share({
           files: [file],
           title: "Backup Data",
         });
-        return;
+        return; // ❗ STOP di sini → NO DOWNLOAD
       } catch (err) {
-        console.log("User cancel / error:", err);
+        alert("Share gagal / dibatalkan", err);
+        return; // ❗ JANGAN fallback ke download
       }
     }
-    // fallback (desktop)
+    // ✅ HANYA DESKTOP YANG DOWNLOAD
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
