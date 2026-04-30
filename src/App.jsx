@@ -200,38 +200,41 @@ function App() {
   };
   //=====Jalur share u/ mem-byPass strict lock os di AndroidMobile======
   const downloadJSON = async () => {
-    if (listNote.length === 0) return alert("Warning!, Data is Empty!");
-    const backupData = { notes: listNote, categories: categories };
+    if (listNote.length === 0) {
+      alert("Warning! Data is Empty.");
+      return;
+    }
+    const backupData = {
+      notes: listNote,
+      categories: categories,
+    };
     const fileContent = JSON.stringify(backupData, null, 2);
-    const fileName = `Markedit_Data_${new Date().getTime()}.json`;
-    // 1. Coba fitur Share (Khusus Mobile)
-    if (navigator.canShare && navigator.share) {
-      const file = new File([fileContent], fileName, {
-        type: "application/json",
-      });
-      if (navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: "Backup Data MarkedIT Agri",
-            text: "Backup data to your phone's or file",
-          });
-          return;
-        } catch (err) {
-          console.log("Share failed, falling back to download...", err);
-        }
+
+    const blob = new Blob(["\uFEFF" + fileContent], {
+      type: "application/json;charset=utf-8",
+    });
+    const file = new File([blob], "Markedit_Data.json", {
+      type: "application/json",
+    });
+    // 🔥 INI KUNCI
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: "Backup Data",
+        });
+        return;
+      } catch (err) {
+        console.log("User cancel / error:", err);
       }
     }
-    const blob = new Blob([fileContent], { type: "application/json" });
+    // fallback (desktop)
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
+    link.download = "Markedit_Data.json";
     link.click();
-    document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    alert("Backup finished! (Downloaded via Browser)");
   };
   const downloadTxt = () => {
     if (listNote.length === 0) return alert("Warning! Data is Empty!");
