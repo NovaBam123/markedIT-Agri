@@ -208,11 +208,12 @@ function App() {
       notes: listNote,
       categories: categories,
     };
-    const fileContent = JSON.stringify(backupData, null, 2);
 
+    const fileContent = JSON.stringify(backupData, null, 2);
     const blob = new Blob(["\uFEFF" + fileContent], {
       type: "application/json;charset=utf-8",
     });
+
     const file = new File([blob], "Markedit_Data.json", {
       type: "application/json",
     });
