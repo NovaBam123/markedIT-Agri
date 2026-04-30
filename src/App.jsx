@@ -200,42 +200,51 @@ function App() {
   };
   //=====Jalur share u/ mem-byPass strict lock os di AndroidMobile======
   const downloadJSON = async () => {
-    if (listNote.length === 0) {
-      alert("Warning! Data is Empty.");
-      return;
-    }
+    if (listNote.length === 0) return alert("Warning! Data is Empty.");
     const backupData = {
       notes: listNote,
       categories: categories,
     };
     const fileContent = JSON.stringify(backupData, null, 2);
-    const blob = new Blob(["\uFEFF" + fileContent], {
-      type: "application/json;charset=utf-8",
-    });
-    const file = new File([blob], "Markedit_Data.json", {
-      type: "application/json",
-    });
-    // 🔥 DETECT MOBILE
-    const isMobile = /Android|iPhone/i.test(navigator.userAgent);
-    if (isMobile && navigator.share) {
+    const fileName = `Markedit_Data_${new Date().getTime()}.json`;
+    // --- ENGINE 1: Modern SaveFilePicker (Ideal buat PC/Chrome) ---
+    if ("showSaveFilePicker" in window) {
       try {
-        await navigator.share({
-          files: [file],
-          title: "Backup Data",
+        const handle = await window.showSaveFilePicker({
+          suggestedName: fileName,
+          types: [
+            {
+              description: "JSON File",
+              accept: { "application/json": [".json"] },
+            },
+          ],
         });
-        return; // ❗ STOP di sini → NO DOWNLOAD
+        const writable = await handle.createWritable();
+        await writable.write(fileContent);
+        await writable.close();
+        return; // Berhasil, langsung keluar dari fungsi
       } catch (err) {
-        alert("Share gagal / dibatalkan", err);
-        return; // ❗ JANGAN fallback ke download
+        if (err.name === "AbortError") return;
+        console.error("SaveFilePicker Error:", err);
       }
     }
-    // ✅ HANYA DESKTOP YANG DOWNLOAD
+    // --- ENGINE 2: Fallback Standard (Paling Aman buat Mobile) ---
+    const blob = new Blob(["\ufeff", fileContent], {
+      type: "application/json;charset=utf-8",
+    });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "Markedit_Data.json";
+    link.download = fileName;
+    document.body.appendChild(link);
     link.click();
-    URL.revokeObjectURL(url);
+    // Cleanup
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 100);
+
+    alert("Success! Downloaded file");
   };
   const downloadTxt = () => {
     if (listNote.length === 0) return alert("Warning! Data is Empty!");
