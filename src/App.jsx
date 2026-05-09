@@ -23,13 +23,13 @@ function App() {
       setListNote(cloneNotes);
       localStorage.setItem("markedit_notes", JSON.stringify(cloneNotes));
       setNoteToEdit(dataDariModal);
-      alert("Data updated successfully!");
+      alert("✔ Data updated successfully!");
     } else {
       const newNote = { ...dataDariModal, id: Date.now() };
       const updatedList = [...listNote, newNote];
       setListNote(updatedList);
       localStorage.setItem("markedit_notes", JSON.stringify(updatedList));
-      alert("New note added!");
+      alert("✔ Success! New note added!");
     }
   };
   const handleOpenEditModal = (note) => {
@@ -81,13 +81,13 @@ function App() {
       text: `text-${finalTheme}`,
     };
     setCategories([...categories, categoryWithId]);
-    alert("Succeed! New Category Added!");
+    alert("✔ Succeed! New Category Added!");
   };
 
   const handleDeleteCategory = (idToDelete, nameToDelete) => {
     const category = categories.find((c) => c.id === idToDelete);
     if (category?.isSystem)
-      return alert("Warning! This category can't deleted!");
+      return alert("📢 Warning! This category can't deleted!");
     if (
       !window.confirm(
         `Delete Category: "${nameToDelete}" ? !Info: All notes in it will be moved to Uncategorized.`
@@ -102,7 +102,7 @@ function App() {
           : note
       )
     );
-    alert("Succeed! Category deleted dan Move to Uncategorized!");
+    alert("✔ Succeed! Category deleted dan Move to Uncategorized!");
   };
   const handleRenameCategory = (idToRename, oldName, newName) => {
     if (!newName.trim() || newName === oldName) return;
@@ -117,7 +117,7 @@ function App() {
       )
     );
     setActiveCategory(newName);
-    alert(`Category rename from ${oldName} to ${newName}!`);
+    alert(`📢 Category rename from ${oldName} to ${newName}!`);
   };
   const handleUpdateCategory = (idToUpdate, updatedData, oldName) => {
     setCategories((prev) =>
@@ -146,7 +146,7 @@ function App() {
       text = await file.text();
     } catch (err) {
       console.log("Error:", err);
-      alert("file.text() gagal, fallback ke FileReader");
+      alert("📢 Error file.text() fallback to FileReader");
     }
     // ✅ TRY 2: fallback FileReader
     if (!text) {
@@ -159,7 +159,7 @@ function App() {
         });
       } catch (err) {
         console.error(err);
-        alert("Error! Failed to read file");
+        alert("📢 Error! Failed to read file");
         return;
       }
     }
@@ -175,28 +175,28 @@ function App() {
         if (window.confirm("Warning! Overwrite old data?")) {
           setListNote(importedData.notes);
           setCategories(importedData.categories);
-          alert("Success! Data installed!");
+          alert("✔ Success! Data installed!");
         }
       } else {
-        alert("Error! Invalid JSON structure!");
+        alert("📢 Error! Invalid JSON structure!");
       }
     } catch (err) {
       console.error("PARSE ERROR:", err);
       console.log("TEXT:", text);
-      alert("Error! JSON parse failed");
+      alert("📢 Error! JSON parse failed");
     }
     e.target.value = "";
   };
 
   const handleDeleteJson = () => {
     const isConfirm = window.confirm(
-      "Are you sure want delete all data in this App?"
+      "📢 Are you sure want delete all data in this App?"
     );
     if (!isConfirm) return;
     localStorage.clear();
     setListNote([]);
     setCategories(defaultCategories);
-    alert("Succeed! Data deleted successfully!");
+    alert("✔ Succeed! Data deleted successfully!");
   };
   //=====Jalur share u/ mem-byPass strict lock os di AndroidMobile======
   const downloadJSON = async () => {
@@ -244,10 +244,10 @@ function App() {
       URL.revokeObjectURL(url);
     }, 100);
 
-    alert("Success! Downloaded file");
+    alert("✔ Success! Downloaded file");
   };
   const downloadTxt = () => {
-    if (listNote.length === 0) return alert("Warning! Data is Empty!");
+    if (listNote.length === 0) return alert("📢 Warning! Data is Empty!");
     // 1. Gabungkan semua note jadi satu string besar
     const fileContent = listNote
       .map((note) => {

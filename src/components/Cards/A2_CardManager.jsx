@@ -22,7 +22,7 @@ function A2_CardManager({ listNote, categories, categoryIcons, activeCategory, s
       if (firstNoteInCat) {
         setSelectNote(firstNoteInCat);
       } else {
-        alert(`No Note have been recorded for ${newCategory}`);
+        alert(`📢 Warning No Note have been recorded for ${newCategory}`);
       }
     };
     const searchedNotes = listNote.filter((note) => {
