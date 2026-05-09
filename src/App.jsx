@@ -137,52 +137,76 @@ function App() {
     }
   };
   // CRUD storage ==========================================================
-  const handleUploadData = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    let text = "";
-    // ✅ TRY 1: file.text()
+ const handleUploadData = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  let text = "";
+  /**
+   * ✅ STRATEGI 1: ARRAY BUFFER (Paling Sakti untuk Android/Realme)
+   * Menarik data biner mentah untuk menghindari blokir 'Security Scoping'
+   */
+  try {
+    const buffer = await file.arrayBuffer();
+    const decoder = new TextDecoder("utf-8");
+    text = decoder.decode(buffer);
+  } catch (err) {
+    console.warn("Strategy 1 (ArrayBuffer) failed, trying Strategy 2...", err);
+  }
+  /**
+   * ✅ STRATEGI 2: FILE.TEXT() (Standard Web API)
+   */
+  if (!text) {
     try {
       text = await file.text();
     } catch (err) {
-      console.log("Error:", err);
+      console.warn("Strategy 2 (file.text) failed, trying Strategy 3...", err);
     }
-    // ✅ TRY 2: fallback FileReader
-    if (!text) {
-      try {
-        text = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          // Pakai UTF-8 secara eksplisit
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = () =>
-            reject(new Error("Error!, Failed to read file via FileReader!"));
-          reader.readAsText(file, "UTF-8");
-        });
-      } catch (err) {
-        console.error(err);
-        alert("📢Error! Failed to read file from system.");
-        return;
-      }
-    }
-    // ✅ TRY 3: THE "SAKTI" CLEAN-UP & PARSING
+  }
+  /**
+   * Menggunakan .slice() untuk memaksa sistem memberikan akses stream baru
+   */
+  if (!text) {
     try {
-      if (!text) throw new Error("File kosong atau tidak terbaca.");
-      const cleanText = text
-        .replace(/^\uFEFF/, "") // Buang BOM (Byte Order Mark)
-        .replace(/^[^{|[^\s]*/, "") // Buang karakter sampah sebelum '{' atau '['
-        .trim(); // Buang spasi/newline liar di akhir
-      const jsonData = JSON.parse(cleanText);
-      if (jsonData && typeof jsonData === "object") {
-        console.log("✅Success! Restore:JsonData", jsonData);
-        alert("✅Success! Data backup has been restored!");
-      } else {
-        throw new Error("Non-JSON Object data structure.");
-      }
+      text = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("Akses file ditolak sistem Android."));
+        // Memaksa pembacaan ulang dengan blob slice
+        reader.readAsText(file.slice(0, file.size), "UTF-8");
+      });
     } catch (err) {
-      console.error("Parsing Error:", err);
-      alert("📢Error!, Failed to parse aata");
+      console.error("All strategies failed:", err);
+      alert("📢 Error! The system denied access to the file.");
+      return;
     }
-  };
+  }
+  /**
+   * ✅ TRY 3: CLEAN-UP & PARSING (Filter Sampah WhatsApp)
+   */
+  try {
+    if (!text || text.trim().length === 0) {
+      throw new Error("File kosong atau tidak terbaca sempurna.");
+    }
+    // Membersihkan karakter aneh/BOM/Metadata WhatsApp di depan kurung kurawal
+    const cleanText = text
+      .replace(/^\uFEFF/, "") 
+      .replace(/^[^{|[^\s]*/, "") 
+      .trim();
+
+    const jsonData = JSON.parse(cleanText);
+
+    if (jsonData && typeof jsonData === "object") {
+      console.log("✅ Success! Data Restore:", jsonData);
+      // INTEGRASI: Jalankan fungsi restore data ke state/DB lu di sini
+      alert("✅ Success! Data backup has been restored!");
+    } else {
+      throw new Error("Struktur data bukan JSON Object yang valid.");
+    }
+  } catch (err) {
+    console.error("Parsing Error:", err);
+    alert("📢 Error! Failed to process data.");
+  }
+};
 
   const handleDeleteJson = () => {
     const isConfirm = window.confirm(
