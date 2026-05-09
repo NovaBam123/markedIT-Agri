@@ -137,76 +137,56 @@ function App() {
     }
   };
   // CRUD storage ==========================================================
- const handleUploadData = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  let text = "";
-  /**
-   * ✅ STRATEGI 1: ARRAY BUFFER (Paling Sakti untuk Android/Realme)
-   * Menarik data biner mentah untuk menghindari blokir 'Security Scoping'
-   */
-  try {
-    const buffer = await file.arrayBuffer();
-    const decoder = new TextDecoder("utf-8");
-    text = decoder.decode(buffer);
-  } catch (err) {
-    console.warn("Strategy 1 (ArrayBuffer) failed, trying Strategy 2...", err);
-  }
-  /**
-   * ✅ STRATEGI 2: FILE.TEXT() (Standard Web API)
-   */
-  if (!text) {
+  const handleUploadData = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    let text = "";
+    // ✅ TRY 1: file.text()
     try {
       text = await file.text();
     } catch (err) {
-      console.warn("Strategy 2 (file.text) failed, trying Strategy 3...", err);
+      console.log("Error:", err);
+      alert("file.text() gagal, fallback ke FileReader");
     }
-  }
-  /**
-   * Menggunakan .slice() untuk memaksa sistem memberikan akses stream baru
-   */
-  if (!text) {
+    // ✅ TRY 2: fallback FileReader
+    if (!text) {
+      try {
+        text = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsText(file);
+        });
+      } catch (err) {
+        console.error(err);
+        alert("Error! Failed to read file");
+        return;
+      }
+    }
+    // 🔥 CLEAN TEXT (jaga2 encoding aneh)
+    text = text.replace(/^\uFEFF/, "").trim();
     try {
-      text = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(new Error("Akses file ditolak sistem Android."));
-        // Memaksa pembacaan ulang dengan blob slice
-        reader.readAsText(file.slice(0, file.size), "UTF-8");
-      });
+      const importedData = JSON.parse(text);
+      if (
+        importedData &&
+        Array.isArray(importedData.notes) &&
+        Array.isArray(importedData.categories)
+      ) {
+        if (window.confirm("Warning! Overwrite old data?")) {
+          setListNote(importedData.notes);
+          setCategories(importedData.categories);
+          alert("Success! Data installed!");
+        }
+      } else {
+        alert("Error! Invalid JSON structure!");
+      }
     } catch (err) {
-      console.error("All strategies failed:", err);
-      alert("📢 Error! The system denied access to the file.");
-      return;
+      console.error("PARSE ERROR:", err);
+      console.log("TEXT:", text);
+      alert("Error! JSON parse failed");
     }
-  }
-  /**
-   * ✅ TRY 3: CLEAN-UP & PARSING (Filter Sampah WhatsApp)
-   */
-  try {
-    if (!text || text.trim().length === 0) {
-      throw new Error("File kosong atau tidak terbaca sempurna.");
-    }
-    // Membersihkan karakter aneh/BOM/Metadata WhatsApp di depan kurung kurawal
-    const cleanText = text
-      .replace(/^\uFEFF/, "") 
-      .replace(/^[^{|[^\s]*/, "") 
-      .trim();
-
-    const jsonData = JSON.parse(cleanText);
-
-    if (jsonData && typeof jsonData === "object") {
-      console.log("✅ Success! Data Restore:", jsonData);
-      // INTEGRASI: Jalankan fungsi restore data ke state/DB lu di sini
-      alert("✅ Success! Data backup has been restored!");
-    } else {
-      throw new Error("Struktur data bukan JSON Object yang valid.");
-    }
-  } catch (err) {
-    console.error("Parsing Error:", err);
-    alert("📢 Error! Failed to process data.");
-  }
-};
+    e.target.value = "";
+  };
 
   const handleDeleteJson = () => {
     const isConfirm = window.confirm(
@@ -221,19 +201,13 @@ function App() {
   //=====Jalur share u/ mem-byPass strict lock os di AndroidMobile======
   const downloadJSON = async () => {
     if (listNote.length === 0) return alert("Warning! Data is Empty.");
-    const now = new Date();
-    const dateStr = now.toLocaleDateString("id-ID").replace(/\//g, "-");
-    // Opsional: Tambah Jam & Menit biar file gak bentrok kalau download berkali-kali
-    const timeStr =
-      now.getHours().toString().padStart(2, "0") +
-      now.getMinutes().toString().padStart(2, "0");
-    const fileName = `Markedit_Backup_${dateStr}_${timeStr}.json`;
     const backupData = {
       notes: listNote,
       categories: categories,
     };
     const fileContent = JSON.stringify(backupData, null, 2);
-    // --- ENGINE 1: Modern SaveFilePicker ---
+    const fileName = `Markedit_Data_${new Date().getTime()}.json`;
+    // --- ENGINE 1: Modern SaveFilePicker (Ideal buat PC/Chrome) ---
     if ("showSaveFilePicker" in window) {
       try {
         const handle = await window.showSaveFilePicker({
@@ -248,13 +222,13 @@ function App() {
         const writable = await handle.createWritable();
         await writable.write(fileContent);
         await writable.close();
-        return;
+        return; // Berhasil, langsung keluar dari fungsi
       } catch (err) {
         if (err.name === "AbortError") return;
         console.error("SaveFilePicker Error:", err);
       }
     }
-    // --- ENGINE 2: Fallback Standard ---
+    // --- ENGINE 2: Fallback Standard (Paling Aman buat Mobile) ---
     const blob = new Blob(["\ufeff", fileContent], {
       type: "application/json;charset=utf-8",
     });
@@ -264,11 +238,13 @@ function App() {
     link.download = fileName;
     document.body.appendChild(link);
     link.click();
+    // Cleanup
     setTimeout(() => {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     }, 100);
-    alert(`Success! Data saved as: ${fileName}`);
+
+    alert("Success! Downloaded file");
   };
   const downloadTxt = () => {
     if (listNote.length === 0) return alert("Warning! Data is Empty!");
