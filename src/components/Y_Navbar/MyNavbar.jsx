@@ -2,7 +2,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "./A3_NonContents.css";
 import {
-  CloudUpload,
   CloudDownload,
   Settings,
   Eraser,
@@ -13,6 +12,7 @@ import {
   FileJson,
   FileText,
   Sprout,
+  HardDriveUpload,
 } from "lucide-react";
 import {
   Navbar,
@@ -187,8 +187,8 @@ function MyNavbar({
         <Navbar.Collapse id="navbarTools">
           <Nav className="d-flex flex-row justify-content-end justify-content-lg-center ms-auto me-auto gap-2 mt-1">
             <div className="menu-icon-style" onClick={triggerUpload}>
-              <CloudUpload size={20} />
-              <span className="font-icon-style">Upload Data</span>
+              <HardDriveUpload size={20} />
+              <span className="font-icon-style">Restore Data</span>
             </div>
 
             <Dropdown align="center" autoClose="outside">

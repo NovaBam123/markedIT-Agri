@@ -146,46 +146,42 @@ function App() {
       text = await file.text();
     } catch (err) {
       console.log("Error:", err);
-      alert("file.text() gagal, fallback ke FileReader");
     }
     // ✅ TRY 2: fallback FileReader
     if (!text) {
       try {
         text = await new Promise((resolve, reject) => {
           const reader = new FileReader();
+          // Pakai UTF-8 secara eksplisit
           reader.onload = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsText(file);
+          reader.onerror = () =>
+            reject(new Error("Error!, Failed to read file via FileReader!"));
+          reader.readAsText(file, "UTF-8");
         });
       } catch (err) {
         console.error(err);
-        alert("Error! Failed to read file");
+        alert("📢Error! Failed to read file from system.");
         return;
       }
     }
-    // 🔥 CLEAN TEXT (jaga2 encoding aneh)
-    text = text.replace(/^\uFEFF/, "").trim();
+    // ✅ TRY 3: THE "SAKTI" CLEAN-UP & PARSING
     try {
-      const importedData = JSON.parse(text);
-      if (
-        importedData &&
-        Array.isArray(importedData.notes) &&
-        Array.isArray(importedData.categories)
-      ) {
-        if (window.confirm("Warning! Overwrite old data?")) {
-          setListNote(importedData.notes);
-          setCategories(importedData.categories);
-          alert("Success! Data installed!");
-        }
+      if (!text) throw new Error("File kosong atau tidak terbaca.");
+      const cleanText = text
+        .replace(/^\uFEFF/, "") // Buang BOM (Byte Order Mark)
+        .replace(/^[^{|[^\s]*/, "") // Buang karakter sampah sebelum '{' atau '['
+        .trim(); // Buang spasi/newline liar di akhir
+      const jsonData = JSON.parse(cleanText);
+      if (jsonData && typeof jsonData === "object") {
+        console.log("✅Success! Restore:JsonData", jsonData);
+        alert("✅Success! Data backup has been restored!");
       } else {
-        alert("Error! Invalid JSON structure!");
+        throw new Error("Non-JSON Object data structure.");
       }
     } catch (err) {
-      console.error("PARSE ERROR:", err);
-      console.log("TEXT:", text);
-      alert("Error! JSON parse failed");
+      console.error("Parsing Error:", err);
+      alert("📢Error!, Failed to parse aata");
     }
-    e.target.value = "";
   };
 
   const handleDeleteJson = () => {
