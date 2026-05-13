@@ -215,7 +215,10 @@ function App() {
           types: [
             {
               description: "JSON File",
-              accept: { "application/json": [".json"] },
+              accept: { 
+                "application/json": [".json"],
+                "text/plain": [".json"]
+              }  
             },
           ],
         });
