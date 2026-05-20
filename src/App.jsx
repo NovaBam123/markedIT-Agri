@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 import A2_CardManager from "./components/Cards/A2_CardManager";
 import MyNavbar from "./components/Y_Navbar/MyNavbar";
 import Z1_ModalNote from "./components/Z1_ModalNote";
@@ -7,8 +7,75 @@ import { defaultCategories, categoryIcons } from "./utils/InitialCategories";
 import ButtonNav from "./components/Y_Navbar/Z3_BottomNav";
 import BottomNav from "./components/Y_Navbar/Z3_BottomNav";
 import AboutView from "./components/Y_Navbar/Y1_AboutView";
+import { DATADUMMY } from "./utils/DataDummy";
 
 function App() {
+//============Mekanisme masuk data dummy=============
+  const handleLoadDummyData = () => {
+    try {
+      const calibratedNotes = DATADUMMY.map((note) => ({
+        id: note.id,
+        title: note.title,
+        category: note.category,
+        theme: note.theme,
+        timeAndDate: note.timeAndDate, 
+        description: note.description
+      }));
+      const seedCategories = [
+        {
+          id: "system-all",
+          name: "AllNote",
+          theme: "info",
+          variant: "outline-info",
+          text: "text-info",
+        },
+        {
+          id: "system-uncategorized",
+          name: "Uncategorized",
+          theme: "warning",
+          variant: "outline-warning",
+          text: "text-warning",
+        },
+        {
+          name: "Metode Pedigree",
+          theme: "danger",
+          iconName: "tag",
+          variant: "outline-danger",
+          text: "text-danger",
+        },
+        {
+          name: "Multiplikasi Benih CMS",
+          theme: "success",
+          iconName: "camera",
+          variant: "outline-success",
+          text: "text-success",
+        },
+        {
+          name: "Analisis AgriPOP",
+          theme: "info",
+          iconName: "globe",
+          variant: "outline-info",
+          text: "text-info",
+        },
+      ];
+
+      // 3. UPDATE STATE SECARA BERSAMAAN
+      setListNote(calibratedNotes);
+      setCategories(seedCategories);
+      // 4. PAKSA SINKRONISASI KE LOCALSTORAGE SECARA MANUAL
+      // Ini trik hardcore buat nge-bypass bug auto-save yang nge-convert objek jadi string!
+      localStorage.setItem("markedIT_notes", JSON.stringify(calibratedNotes)); // sesuaikan key-nya jika beda
+      localStorage.setItem(
+        "markedIT_categories",
+        JSON.stringify(seedCategories)
+      ); // sesuaikan key-nya
+
+      alert("💹 Succeed! Field research sample data successfully loaded.");
+    } catch (error) {
+      console.error("Error on load seed data:", error);
+      alert("❌ Error! Failed to load sample data.");
+    }
+  };
   // ForModalNote =========================================
   const [listNote, setListNote] = useState(() => {
     const savedNotes = localStorage.getItem("myNotes");
@@ -215,10 +282,10 @@ function App() {
           types: [
             {
               description: "JSON File",
-              accept: { 
+              accept: {
                 "application/json": [".json"],
-                "text/plain": [".json"]
-              }  
+                "text/plain": [".json"],
+              },
             },
           ],
         });
@@ -348,22 +415,52 @@ function App() {
       {currentView === "dashboard" && (
         <>
           <Container className="bg-dark mt-2 px-4 min-vh-100">
-            <A2_CardManager
-              listNote={listNote}
-              categories={categories}
-              categoryIcons={categoryIcons}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-              searchQuery={searchQuery}
-              onDelete={handleDelete}
-              onEdit={handleOpenEditModal}
-              onAddCategory={handleAddCategory}
-              onOpenModal={handleOpenNewNote}
-              onDeleteCategory={handleDeleteCategory}
-              handleRenameCategory={handleRenameCategory}
-              onUpdateCategory={handleUpdateCategory}
-              downloadSingleMD={downloadSingleMD}
-            />
+            {/* LOGIKA EMPTY STATE: Jika kosong, tampilin area Onboarding & Tombol */}
+            {listNote.length === 0 ? (
+              <div className="text-center py-5 border border-secondary border-dashed rounded bg-dark bg-opacity-25 mt-4">
+                <div className="mb-3" style={{ fontSize: "3rem" }}>
+                  🌾
+                </div>
+                <h4 className="text-info fw-bold">Welcome to MarkedIT Agri</h4>
+                <p
+                  className="text-light opacity-75 small mx-auto"
+                  style={{ maxWidth: "500px" }}
+                >
+                  A lightweight, offline-first Markdown logging tool engineered
+                  specifically for remote agricultural field research.
+                </p>
+                <div className="mt-4">
+                  {/* Variant-nya diganti ke outline-info biar nyala neon keren di background dark */}
+                  <Button
+                    variant="outline-info"
+                    size="sm"
+                    className="fw-bold px-4"
+                    onClick={handleLoadDummyData}
+                  >
+                    🚀 Load Field Research Sample
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              // JIKA ADA DATA: Tampilkan Card Manager biasa
+              <A2_CardManager
+                listNote={listNote}
+                categories={categories}
+                categoryIcons={categoryIcons}
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+                searchQuery={searchQuery}
+                onDelete={handleDelete}
+                onEdit={handleOpenEditModal}
+                onAddCategory={handleAddCategory}
+                onOpenModal={handleOpenNewNote}
+                onDeleteCategory={handleDeleteCategory}
+                handleRenameCategory={handleRenameCategory}
+                onUpdateCategory={handleUpdateCategory}
+                downloadSingleMD={downloadSingleMD}
+              />
+            )}
+
             <Z1_ModalNote
               onShow={showModal}
               onHide={() => setShowModal(false)}
